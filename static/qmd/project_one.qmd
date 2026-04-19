@@ -38,14 +38,14 @@ To help answer some of these question I found a dataset on [kaggle](https://www.
 from pathlib import Path # Import file paths library.
 import re # Import regex.
 
-p = Path("./data/Olivia_Rodrigo_Songs") # Path to .txt files.
+p = Path("../../data/Olivia_Rodrigo_Songs") # Path to .txt files.
 
 exclude = {
     ".DS_Store",
     "OTHERS"
 } # A few folders to ignore including.
 
-with open("data/lyrics_data.csv", "w") as csv: # Open file to write too
+with open("../../data/lyrics_data.csv", "w") as csv: # Open file to write too
     _ = csv.write("album, song, text\n") # Start the csv with column names.
     
     # Iterate through each item in p ignoring exclude.
@@ -79,7 +79,7 @@ Here we loop through each text file and extract the text line by line. We also a
 #| echo: false
 
 # Import dataset.
-lyrics_tibble <- read_csv("~/Documents/Programing/R/SDS264_S26/Mini_Project_One/data/lyrics_data.csv")
+lyrics_tibble <- read_csv("../../data/lyrics_data.csv")
 
 # Tokenify the data.
 tidy_lyrics <- lyrics_tibble |>

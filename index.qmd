@@ -1,5 +1,5 @@
 ---
-title: "Henry Norton-Bower"
+title: ""
 ---
 
 This is my really cool website. It even has a apple tier list (wip).

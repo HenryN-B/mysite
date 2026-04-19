@@ -9,7 +9,7 @@ format: html
 
     <head>
         <title>Apple Tier List</title>
-        <link rel="stylesheet" href="static/css/styles.css">
+        <link rel="stylesheet" href="../css/styles.css">
     </head>
     <body>
 
@@ -24,7 +24,7 @@ format: html
 
     <div>
         <div class = "tier-list-box" >
-            <p class = "tier-s">S:</p> <img src="static/images/honey_crsip.jpeg">
+            <p class = "tier-s">S:</p> <img src="../images/honey_crsip.jpeg">
         </div>
 
         <div class = "tier-list-box">

@@ -3,13 +3,14 @@ project:
   output-dir: docs
 
 website:
-  title: "mysite"
+  title: "Henry N-B"
   navbar:
     left:
       - href: index.qmd
         text: Home
-      - project_one.qmd
-      - apple.qmd
+      - static/qmd/project_one.qmd
+      - static/qmd/apple.qmd
+      - static/qmd/maps.qmd
 
 format:
   html:
@@ -20,4 +21,3 @@ format:
     toc: true
 
 editor: visual
-
