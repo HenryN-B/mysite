@@ -32,6 +32,8 @@ To help answer some of these question I found a dataset on [kaggle](https://www.
 ```{python}
 #| include: true 
 #| results: 'hide'
+#| code-fold: true
+#| code-summary: "Click to see the python script"
 
 # Python script that breaks down the text files into a csv.
 
@@ -71,7 +73,7 @@ with open("../../data/lyrics_data.csv", "w") as csv: # Open file to write too
                     _ = csv.write(f"{album_name}, {song_name}, \"{line}\"\n")
 ```
 
-Here we loop through each text file and extract the text line by line. We also are getting the album name and song title using regular expressions on the files name.
+In the script we loop through each text file and extract the text line by line. We also are getting the album name and song title using regular expressions on the files name.
 
 ```{r}
 #| warning: false
@@ -108,14 +110,14 @@ One other small thing to note on song title formatting, is that all song titles 
 Next we will try a very basic test analysis. I've chosen some words that are commonly associated with heart break. We can then detect to mark if any giving line has one of the words associated with heart break and then mark it as such.
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Click to see source code"
+
 # Use str_detect to make a new column
 lyrics_tibble <- lyrics_tibble |>
   mutate(
     is_emotional = str_detect(text,
                               "cry|hurt|pain|hate|love|sorry|miss|break"))
-```
-
-```{r}
 # Make a table of emotional lines in SOUR vs GUTS
 emotional_tibble <- lyrics_tibble |>
   group_by(album) |>
@@ -129,7 +131,7 @@ emotional_tibble <- lyrics_tibble |>
 ```{r}
 #| echo: false
 
-kable(emotional_tibble,col.names = c("Album", "Total Lines", "Emotional Lines", "Proportion"),  caption = "Table of emotional lines in SOUR vs GUTS")
+kable(emotional_tibble,col.names = c("Album", "Total Lines", "Emotional Lines", "Proportion"),  caption = "Table 1: Table of emotional lines in SOUR vs GUTS")
 ```
 
 We can see in Table 1 that in GUTS there was 64 emotional line making up around 7 percent of the line, while SOUR had only 49, but in all SOUR has line total lines making it come out to SOUR having around 9 percent emotional lines.
@@ -140,6 +142,9 @@ Here we use the AFINN lexicon that scores words on their positivity to negativit
 
 ```{r}
 #| fig-cap: "Alt-Text: This Figure is a bar chart of the AFINN sentiment score for Olivia Rodrigo's 2 albums SOUR and GUTS. The x-axis is her two albums and the y-axis had the sentiment score from 0 to 0.6 (scores range from -3 very negative to 3 very positive). We can see that SOUR has a value of about 0.58 which tells us that it is moderately positive, while GUTS has a score of 0.18 which tells us that it is only very slightly positive and less positive then SOUR."
+#| code-fold: true
+#| code-summary: "Click to see source code"
+
 tidy_lyrics |>
   inner_join(get_sentiments("afinn"), 
              by = "word") |>
@@ -164,6 +169,9 @@ Next we can use the "nrc" sentiment lexicon that groups each words with their gi
 
 ```{r}
 #| fig-cap: ""
+#| code-fold: true
+#| code-summary: "Click to see source code"
+
 # Make the figure of top words 
 tidy_lyrics |>
   inner_join(get_sentiments("nrc"), 
@@ -192,6 +200,9 @@ Overall, while both albums draw heavily on the language of heartbreak, SOUR's sa
 And lastly to answer the final question I had about this dataset, who are the song made about? Are they self centered, about someone, or FOR someone. To answer this I will use a string function to detect when ever a first, second or third person pronouns is used.
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Click to see source code"
+
 # Make the person_tibble using regex.
 person_tibble <- lyrics_tibble |>
   mutate(first_person = str_detect(text, 
@@ -212,7 +223,7 @@ person_tibble <- lyrics_tibble |>
 #| echo: false
 
 # Make nice looking table.
-kable(person_tibble, caption = "Table of Point of View Proportion")
+kable(person_tibble, caption = "Table 2: Table of Point of View Proportion")
 ```
 
 Table 2 shows the proportions of lines that are written in that point of view. Sour clearly has the highest proportion of second person lines with almost 47 percent of all lines in this album. This suggests that in SOUR many of Rodrigo's are directed to specific people, which would make since because much of the album focuses on her breakup with a certain individual.

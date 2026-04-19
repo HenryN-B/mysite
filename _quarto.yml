@@ -9,8 +9,8 @@ website:
       - href: index.qmd
         text: Home
       - static/qmd/project_one.qmd
-      - static/qmd/apple.qmd
       - static/qmd/maps.qmd
+      - static/qmd/apple.qmd
 
 format:
   html:

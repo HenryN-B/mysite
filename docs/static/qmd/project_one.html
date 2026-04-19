@@ -138,12 +138,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Analyzing Olivia Rodrigo’s Lyrics</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../static/qmd/apple.html"> 
-<span class="menu-text">Apple Tier List</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../../static/qmd/maps.html"> 
 <span class="menu-text">Choropleth Maps</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../static/qmd/apple.html"> 
+<span class="menu-text">Apple Tier List</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -207,6 +207,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>One thing that I wanted to figure out is with many of her songs having the themes of heart break and sadness, what words and how does she use to convey these strong emotions. I was also curious how her overall tone has shifted between her two albums but also who the songs are about. Are the songs more self centered or are they more focused on others and has that changed between albums.</p>
 <p>To help answer some of these question I found a dataset on <a href="https://www.kaggle.com/datasets/mehaksingal/olivia-rodrigo-lyrics-datasetl">kaggle</a> which was the raw text files of her lyrics for those 2 albums including the songs off of the deluxe version of GUTS.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Click to see the python script</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Python script that breaks down the text files into a csv.</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path <span class="co"># Import file paths library.</span></span>
@@ -243,8 +245,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> line <span class="kw">in</span> <span class="bu">file</span>:</span>
 <span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>                    line <span class="op">=</span> line.rstrip(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span>
 <span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>                    _ <span class="op">=</span> csv.write(<span class="ss">f"</span><span class="sc">{</span>album_name<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>song_name<span class="sc">}</span><span class="ss">, </span><span class="ch">\"</span><span class="sc">{</span>line<span class="sc">}</span><span class="ch">\"\n</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<p>Here we loop through each text file and extract the text line by line. We also are getting the album name and song title using regular expressions on the files name.</p>
+<p>In the script we loop through each text file and extract the text line by line. We also are getting the album name and song title using regular expressions on the files name.</p>
 <p>One things that we notice is that the song title are currently separated by underscore not space. While we normal prefer this for tidy dataset reasons, I want to change it so that they are separated by spaces because it will look nicer when we start visualizing our data. To solve this a <code>str</code> function can be used to replace all “_”’s with spaces.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace "_" with a space (str_replace)</span></span>
@@ -261,26 +264,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Analysis</h1>
 <p>Next we will try a very basic test analysis. I’ve chosen some words that are commonly associated with heart break. We can then detect to mark if any giving line has one of the words associated with heart break and then mark it as such.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Click to see source code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use str_detect to make a new column</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>lyrics_tibble <span class="ot">&lt;-</span> lyrics_tibble <span class="sc">|&gt;</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_emotional =</span> <span class="fu">str_detect</span>(text,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"cry|hurt|pain|hate|love|sorry|miss|break"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a table of emotional lines in SOUR vs GUTS</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>emotional_tibble <span class="ot">&lt;-</span> lyrics_tibble <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(album) <span class="sc">|&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_lines =</span> <span class="fu">n</span>(),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">emotional_lines =</span> <span class="fu">sum</span>(is_emotional, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_emotional =</span> emotional_lines <span class="sc">/</span> total_lines</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"cry|hurt|pain|hate|love|sorry|miss|break"</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a table of emotional lines in SOUR vs GUTS</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>emotional_tibble <span class="ot">&lt;-</span> lyrics_tibble <span class="sc">|&gt;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(album) <span class="sc">|&gt;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_lines =</span> <span class="fu">n</span>(),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">emotional_lines =</span> <span class="fu">sum</span>(is_emotional, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_emotional =</span> emotional_lines <span class="sc">/</span> total_lines</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
-<caption>Table of emotional lines in SOUR vs GUTS</caption>
+<caption>Table 1: Table of emotional lines in SOUR vs GUTS</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Album</th>
@@ -310,26 +314,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This is cool information but my chosen list just is not that robust and is probably missing many other emotional words. To help with this we can use a pre made lexicon that will include much more words and will be much more robust.</p>
 <p>Here we use the AFINN lexicon that scores words on their positivity to negativity, we then take the average score of each word for both albums.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tidy_lyrics <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(<span class="fu">get_sentiments</span>(<span class="st">"afinn"</span>), </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(album) <span class="sc">|&gt;</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_sentiment =</span> <span class="fu">mean</span>(value)) <span class="sc">|&gt;</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">album =</span> <span class="fu">fct_relevel</span>(album, <span class="st">"SOUR"</span>, <span class="st">"GUTS"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> album, </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> avg_sentiment, </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">fill =</span> album)) <span class="sc">+</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Average Sentiment Score by Album"</span>,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Avg AFINN Score"</span>, <span class="at">x =</span> <span class="st">"Album"</span>) <span class="sc">+</span> </span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"GUTS"</span> <span class="ot">=</span> <span class="st">"#3D376B"</span>,</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SOUR"</span> <span class="ot">=</span> <span class="st">"#8681BD"</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold">
+<summary>Click to see source code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tidy_lyrics <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(<span class="fu">get_sentiments</span>(<span class="st">"afinn"</span>), </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(album) <span class="sc">|&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_sentiment =</span> <span class="fu">mean</span>(value)) <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">album =</span> <span class="fu">fct_relevel</span>(album, <span class="st">"SOUR"</span>, <span class="st">"GUTS"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> album, </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> avg_sentiment, </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">fill =</span> album)) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Average Sentiment Score by Album"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Avg AFINN Score"</span>, <span class="at">x =</span> <span class="st">"Album"</span>) <span class="sc">+</span> </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"GUTS"</span> <span class="ot">=</span> <span class="st">"#3D376B"</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SOUR"</span> <span class="ot">=</span> <span class="st">"#8681BD"</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="project_one_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_one_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 <figcaption>Alt-Text: This Figure is a bar chart of the AFINN sentiment score for Olivia Rodrigo’s 2 albums SOUR and GUTS. The x-axis is her two albums and the y-axis had the sentiment score from 0 to 0.6 (scores range from -3 very negative to 3 very positive). We can see that SOUR has a value of about 0.58 which tells us that it is moderately positive, while GUTS has a score of 0.18 which tells us that it is only very slightly positive and less positive then SOUR.</figcaption>
 </figure>
 </div>
@@ -338,27 +345,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We see that SOUR has a score of 0.6 which means its slightly positive while GUTS has a score of 0.2. This helps answer how the tone has changed over the two albums, that GUTS is more negative then SOUR but still slightly positive.</p>
 <p>Next we can use the “nrc” sentiment lexicon that groups each words with their giving emotions. This is the more robust version of what we did in table 1, but this time we are looking at the words that Olivia Rodrigo uses to convey the heart break in her albums.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the figure of top words </span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>tidy_lyrics <span class="sc">|&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(<span class="fu">get_sentiments</span>(<span class="st">"nrc"</span>), </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="st">"word"</span>, </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">relationship =</span> <span class="st">"many-to-many"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sentiment <span class="sc">==</span> <span class="st">"sadness"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(album, word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(album) <span class="sc">|&gt;</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">10</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder_within</span>(word, n, album), <span class="at">y =</span> n, <span class="at">fill =</span> album)) <span class="sc">+</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="fu">fct_relevel</span>(album, <span class="st">"SOUR"</span>, <span class="st">"GUTS"</span>), <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_reordered</span>() <span class="sc">+</span> </span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top Sadness Words by Album"</span>, <span class="at">x =</span> <span class="st">"Word"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span> </span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"GUTS"</span> <span class="ot">=</span> <span class="st">"#3D376B"</span>, <span class="st">"SOUR"</span> <span class="ot">=</span> <span class="st">"#8681BD"</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold">
+<summary>Click to see source code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the figure of top words </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>tidy_lyrics <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(<span class="fu">get_sentiments</span>(<span class="st">"nrc"</span>), </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="st">"word"</span>, </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">relationship =</span> <span class="st">"many-to-many"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sentiment <span class="sc">==</span> <span class="st">"sadness"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(album, word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(album) <span class="sc">|&gt;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder_within</span>(word, n, album), <span class="at">y =</span> n, <span class="at">fill =</span> album)) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="fu">fct_relevel</span>(album, <span class="st">"SOUR"</span>, <span class="st">"GUTS"</span>), <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_reordered</span>() <span class="sc">+</span> </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top Sadness Words by Album"</span>, <span class="at">x =</span> <span class="st">"Word"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span> </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"GUTS"</span> <span class="ot">=</span> <span class="st">"#3D376B"</span>, <span class="st">"SOUR"</span> <span class="ot">=</span> <span class="st">"#8681BD"</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="project_one_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_one_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -368,25 +378,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Overall, while both albums draw heavily on the language of heartbreak, SOUR’s sadness leans toward feelings of jealousy and betrayal, whereas GUTS reflects a deeper emotional feeling.</p>
 <p>And lastly to answer the final question I had about this dataset, who are the song made about? Are they self centered, about someone, or FOR someone. To answer this I will use a string function to detect when ever a first, second or third person pronouns is used.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the person_tibble using regex.</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>person_tibble <span class="ot">&lt;-</span> lyrics_tibble <span class="sc">|&gt;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">first_person =</span> <span class="fu">str_detect</span>(text, </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">"^I</span><span class="sc">\\</span><span class="st">b"</span>),</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">second_person =</span> <span class="fu">str_detect</span>(<span class="fu">str_to_lower</span>(text), </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">"</span><span class="sc">\\</span><span class="st">b(you|your|yours|yourself)</span><span class="sc">\\</span><span class="st">b"</span>),</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">third_person =</span> <span class="fu">str_detect</span>(<span class="fu">str_to_lower</span>(text),                        </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">"</span><span class="sc">\\</span><span class="st">b(he|him|his|she|her|hers</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="st">                                   |they|them|theirs)</span><span class="sc">\\</span><span class="st">b"</span>),</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">album =</span> <span class="fu">fct_relevel</span>(album, <span class="st">"SOUR"</span>, <span class="st">"GUTS"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(album) <span class="sc">|&gt;</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">"First Person Proportion"</span> <span class="ot">=</span> <span class="fu">mean</span>(first_person, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Second Person Proportion"</span> <span class="ot">=</span> <span class="fu">mean</span>(second_person, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Third Person Proportion"</span> <span class="ot">=</span> <span class="fu">mean</span>(third_person, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold">
+<summary>Click to see source code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the person_tibble using regex.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>person_tibble <span class="ot">&lt;-</span> lyrics_tibble <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">first_person =</span> <span class="fu">str_detect</span>(text, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">"^I</span><span class="sc">\\</span><span class="st">b"</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">second_person =</span> <span class="fu">str_detect</span>(<span class="fu">str_to_lower</span>(text), </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">"</span><span class="sc">\\</span><span class="st">b(you|your|yours|yourself)</span><span class="sc">\\</span><span class="st">b"</span>),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">third_person =</span> <span class="fu">str_detect</span>(<span class="fu">str_to_lower</span>(text),                        </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">"</span><span class="sc">\\</span><span class="st">b(he|him|his|she|her|hers</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">                                   |they|them|theirs)</span><span class="sc">\\</span><span class="st">b"</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">album =</span> <span class="fu">fct_relevel</span>(album, <span class="st">"SOUR"</span>, <span class="st">"GUTS"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(album) <span class="sc">|&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">"First Person Proportion"</span> <span class="ot">=</span> <span class="fu">mean</span>(first_person, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Second Person Proportion"</span> <span class="ot">=</span> <span class="fu">mean</span>(second_person, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Third Person Proportion"</span> <span class="ot">=</span> <span class="fu">mean</span>(third_person, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
-<caption>Table of Point of View Proportion</caption>
+<caption>Table 2: Table of Point of View Proportion</caption>
 <colgroup>
 <col style="width: 7%">
 <col style="width: 30%">
