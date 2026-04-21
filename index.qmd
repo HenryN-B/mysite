@@ -1,5 +1,37 @@
 ---
-title: ""
+title: "Henry Norton-Bower (He/Him)"
+image: /static/images/temp.jpeg
 ---
 
-This is my really cool website. It even has a apple tier list (wip).
+## About Me
+
+
+![Test](/static/images/temp.jpeg)
+I'm a Computer Science and Mathematics student at St. Olaf College with a 
+concentration in Statistics. I enjoy solving problems that make me think. The kind 
+where you have to sit with them for a while before something clicks. Recently i have been working a online multiplier version of mastermind.
+
+Outside of academics I like being outside. Nordic skiing is one my favorite 
+winter activity, and when it gets warmer i just enjoy being in the sun. I also enjoy playing games weather it be board games or video games recenlty it has been a lot of kerbal space program.
+
+## Education
+
+- **BA, Computer Science & Mathematics** | St. Olaf College | 2027
+
+## Experience
+
+- Computer Science/Mathematics TA | St. Olaf College | September 2024 - present
+    - Assisted students in understanding programming concepts through one-on-one guidance and group instruction, enhancing their problem-solving and coding skills.
+    - Collaborated with the professor to review and enhance assignments, ensuring clarity of instructions, alignment with learning objectives.
+
+
+## Skills & Expertise
+
+- C++, Python, R, Rust, Go, SQL, HTML, CSS
+- Git, Visual Studio Code, R Studio, Google Workspace.
+
+## Contact
+
+- My Website [Henrynorton-bower.com](https://henrynortonbower.com)
+- LinkedIn: [henry-norton-bower-282044335/](https://www.linkedin.com/in/henry-norton-bower-282044335/)
+- GitHub: [github.com/HenryN-B](https://github.com/HenryN-B)

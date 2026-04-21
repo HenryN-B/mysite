@@ -15,6 +15,10 @@ library(mdsr)
 library(sf)
 library(poliscidata) 
 library(viridis)
+library(leaflet)
+library(htmltools)
+library(glue)
+
 ```
 
 ```{r}
@@ -97,29 +101,36 @@ states_sf |>
 
 ```
 
-Here we have some
+Here we have some choropleth maps some interactive that show some trends in `poliscidata`, more speficly the trends in US abortion rate in 2008, and States support level for gay marriage also in 2008.
 
-Numeric variable (static plot):
+In this first plot we have a example of a static choropleth map, using abortion rate in the States.
 
 ```{r}
+#| warning: false
+#| fig-cap: "Figure 1: Abortion trends in US states in 2008. It can be seen that states in the middle of the county have the lowest abortion rate while California, Nevada, Florida, and New York have the highest rate"
+#| echo: false
+
 state_map |>
   ggplot(mapping = aes(x = long, y = lat, group = group)) +
   geom_polygon(aes(fill = abort_rate08 ), color = "black", linewidth = 0.2) +
   coord_map() + 
   theme_void() + 
   scale_fill_viridis() +
-  labs(fill = "Abortion Rate Per 1000  ",
-       title = "  Abortion Rate in US States 2008") 
+  labs(fill = "Abortion Rate \nPer 1000 Women   ",
+       title = "  Abortion Rate in US States 2008",
+       caption = "Source: [https://CRAN.R-project.org/package=poliscidata]") 
 
 ```
 
-Numeric variable (interactive plot):
+While this is informative, we cant see the exact rate for each state, we can make a interactive `leaflet` plot to better show this trend.
 
 ```{r}
-#| eval: false
+#| warning: false
+#| echo: false
+#| fig-cap: "Figure 2: Abortion trends in US states in 2008. It can be seen that states in the middle of the county have the lowest abortion rate while California, Nevada, Florida, and New York have the highest rate. \nSource: [https://CRAN.R-project.org/package=poliscidata]"
 
 bins <- c(0, 5, 10, 20, 30, 40, 50)
-pal <- colorBin("YlOrRd", domain = states_sf$abort_rate08, bins = bins)
+pal <- colorBin("viridis", domain = states_sf$abort_rate08, bins = bins)
 
 states_sf <- states_sf |>
   mutate(labels = str_c(name, ": ", states_sf$abort_rate08, " per 1000 Women"))
@@ -127,7 +138,7 @@ states_sf <- states_sf |>
 labels <- lapply(states_sf$labels, HTML)
 
 leaflet(states_sf) |>
-  setView(-96, 37.8, 4) |>
+  setView(-96, 37.8, 3.5) |>
   addTiles() |>
   addPolygons(
     fillColor = ~pal(abort_rate08),
@@ -135,7 +146,7 @@ leaflet(states_sf) |>
     opacity = 1,
     color = "white",
     dashArray = "12",
-    fillOpacity = 0.5,
+    fillOpacity = 0.6,
     highlightOptions = highlightOptions(
       weight = 3,
       color = "#666",
@@ -151,9 +162,13 @@ leaflet(states_sf) |>
     position = "bottomright")
 ```
 
-Categorical variable (static plot):
+Now we can look at a categorical variable, with a static plot with gay marige support.
 
 ```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Figure 3: support of gay marriage in us states. We can see that most states in the south have low support, while states on the east and west coasts and rust belt have higher support."
+
 state_map |>
   filter(state != "districtofcolumbia") |>
   ggplot(mapping = aes(x = long, y = lat, group = group)) +
@@ -162,13 +177,16 @@ state_map |>
   theme_void() + 
   scale_fill_manual(values = c("#bb97f7", "#8b48fa", "#6002fa")) +
   labs(fill = "Level of Agreement   ",
-       title = "   Support of Gay marriage in US states") 
+       title = "   Support of Gay marriage in US states", 
+        caption = "Source: [https://CRAN.R-project.org/package=poliscidata]") 
 ```
 
-Categorical variable (interactive plot):
+And again here is a interactive version using leaflet.
 
 ```{r}
-#| eval: false
+#| echo: false
+#| warning: false
+#| fig-cap: "Figure 4: support of gay marriage in us states. We can see that most states in the south have low support, while states on the east and west coasts and rust belt have higher support. \nSource: [https://CRAN.R-project.org/package=poliscidata]"
 
 pal <- colorFactor(c("#bb97f7", "#8b48fa", "#6002fa"), domain = states_sf$gay_support3)
 
@@ -178,7 +196,7 @@ states_sf <- states_sf |>
 labels <- lapply(states_sf$labels, HTML)
 
 leaflet(states_sf) |>
-  setView(-96, 37.8, 4) |>
+  setView(-96, 37.8, 3.5) |>
   addTiles() |>
   addPolygons(
     fillColor = ~pal(gay_support3),

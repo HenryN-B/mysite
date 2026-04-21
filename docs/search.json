@@ -16,15 +16,50 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Henry N-B",
+    "title": "Henry Norton-Bower (He/Him)",
     "section": "",
-    "text": "This is my really cool website. It even has a apple tier list (wip)."
+    "text": "I’m a Computer Science and Mathematics student at St. Olaf College with a concentration in Statistics. I enjoy solving problems that make me think. The kind where you have to sit with them for a while before something clicks. Recently i have been working a online multiplier version of mastermind.\nOutside of academics I like being outside. Nordic skiing is one my favorite winter activity, and when it gets warmer i just enjoy being in the sun. I also enjoy playing games weather it be board games or video games recenlty it has been a lot of kerbal space program."
+  },
+  {
+    "objectID": "index.html#about-me",
+    "href": "index.html#about-me",
+    "title": "Henry Norton-Bower (He/Him)",
+    "section": "",
+    "text": "I’m a Computer Science and Mathematics student at St. Olaf College with a concentration in Statistics. I enjoy solving problems that make me think. The kind where you have to sit with them for a while before something clicks. Recently i have been working a online multiplier version of mastermind.\nOutside of academics I like being outside. Nordic skiing is one my favorite winter activity, and when it gets warmer i just enjoy being in the sun. I also enjoy playing games weather it be board games or video games recenlty it has been a lot of kerbal space program."
+  },
+  {
+    "objectID": "index.html#education",
+    "href": "index.html#education",
+    "title": "Henry Norton-Bower (He/Him)",
+    "section": "Education",
+    "text": "Education\n\nBA, Computer Science & Mathematics | St. Olaf College | 2027"
+  },
+  {
+    "objectID": "index.html#experience",
+    "href": "index.html#experience",
+    "title": "Henry Norton-Bower (He/Him)",
+    "section": "Experience",
+    "text": "Experience\n\nComputer Science/Mathematics TA | St. Olaf College | September 2024 - present\n\nAssisted students in understanding programming concepts through one-on-one guidance and group instruction, enhancing their problem-solving and coding skills.\nCollaborated with the professor to review and enhance assignments, ensuring clarity of instructions, alignment with learning objectives."
+  },
+  {
+    "objectID": "index.html#skills-expertise",
+    "href": "index.html#skills-expertise",
+    "title": "Henry Norton-Bower (He/Him)",
+    "section": "Skills & Expertise",
+    "text": "Skills & Expertise\n\nC++, Python, R, Rust, Go, SQL, HTML, CSS\nGit, Visual Studio Code, R Studio, Google Workspace."
+  },
+  {
+    "objectID": "index.html#contact",
+    "href": "index.html#contact",
+    "title": "Henry Norton-Bower (He/Him)",
+    "section": "Contact",
+    "text": "Contact\n\nMy Website Henrynorton-bower.com\nLinkedIn: henry-norton-bower-282044335/\nGitHub: github.com/HenryN-B"
   },
   {
     "objectID": "static/qmd/maps.html",
     "href": "static/qmd/maps.html",
     "title": "Choropleth Maps",
     "section": "",
-    "text": "Here we have some\nNumeric variable (static plot):\n\nstate_map |&gt;\n  ggplot(mapping = aes(x = long, y = lat, group = group)) +\n  geom_polygon(aes(fill = abort_rate08 ), color = \"black\", linewidth = 0.2) +\n  coord_map() + \n  theme_void() + \n  scale_fill_viridis() +\n  labs(fill = \"Abortion Rate Per 1000  \",\n       title = \"  Abortion Rate in US States 2008\") \n\n\n\n\n\n\n\n\nNumeric variable (interactive plot):\n\nbins &lt;- c(0, 5, 10, 20, 30, 40, 50)\npal &lt;- colorBin(\"YlOrRd\", domain = states_sf$abort_rate08, bins = bins)\n\nstates_sf &lt;- states_sf |&gt;\n  mutate(labels = str_c(name, \": \", states_sf$abort_rate08, \" per 1000 Women\"))\n\nlabels &lt;- lapply(states_sf$labels, HTML)\n\nleaflet(states_sf) |&gt;\n  setView(-96, 37.8, 4) |&gt;\n  addTiles() |&gt;\n  addPolygons(\n    fillColor = ~pal(abort_rate08),\n    weight = 2,\n    opacity = 1,\n    color = \"white\",\n    dashArray = \"12\",\n    fillOpacity = 0.5,\n    highlightOptions = highlightOptions(\n      weight = 3,\n      color = \"#666\",\n      dashArray = \"0.1\",\n      fillOpacity = 0.9,\n      bringToFront = TRUE),\n    label = labels,\n    labelOptions = labelOptions(\n      style = list(\"font-weight\" = \"normal\", padding = \"3px 8px\"),\n      textsize = \"15px\",\n      direction = \"auto\")) |&gt;\n  addLegend(pal = pal, values = ~abort_rate08, opacity = 0.7, title = NULL,\n    position = \"bottomright\")\n\nCategorical variable (static plot):\n\nstate_map |&gt;\n  filter(state != \"districtofcolumbia\") |&gt;\n  ggplot(mapping = aes(x = long, y = lat, group = group)) +\n  geom_polygon(aes(fill = gay_support3 ), color = \"black\", linewidth = 0.2) +\n  coord_map() + \n  theme_void() + \n  scale_fill_manual(values = c(\"#bb97f7\", \"#8b48fa\", \"#6002fa\")) +\n  labs(fill = \"Level of Agreement   \",\n       title = \"   Support of Gay marriage in US states\") \n\n\n\n\n\n\n\n\nCategorical variable (interactive plot):\n\npal &lt;- colorFactor(c(\"#bb97f7\", \"#8b48fa\", \"#6002fa\"), domain = states_sf$gay_support3)\n\nstates_sf &lt;- states_sf |&gt;\n  mutate(labels = str_c(name, \": \", states_sf$gay_support3))\n\nlabels &lt;- lapply(states_sf$labels, HTML)\n\nleaflet(states_sf) |&gt;\n  setView(-96, 37.8, 4) |&gt;\n  addTiles() |&gt;\n  addPolygons(\n    fillColor = ~pal(gay_support3),\n    weight = 2,\n    opacity = 1,\n    color = \"white\",\n    dashArray = \"12\",\n    fillOpacity = 0.8,\n    highlightOptions = highlightOptions(\n      weight = 3,\n      color = \"#666\",\n      dashArray = \"0.1\",\n      fillOpacity = 0.9,\n      bringToFront = TRUE),\n    label = labels,\n    labelOptions = labelOptions(\n      style = list(\"font-weight\" = \"normal\", padding = \"3px 8px\"),\n      textsize = \"15px\",\n      direction = \"auto\")) |&gt;\n  addLegend(pal = pal, values = ~gay_support3, opacity = 0.7, title = NULL,\n    position = \"bottomright\")"
+    "text": "Here we have some choropleth maps some interactive that show some trends in poliscidata, more speficly the trends in US abortion rate in 2008, and States support level for gay marriage also in 2008.\nIn this first plot we have a example of a static choropleth map, using abortion rate in the States.\n\n\n\n\n\nFigure 1: Abortion trends in US states in 2008. It can be seen that states in the middle of the county have the lowest abortion rate while California, Nevada, Florida, and New York have the highest rate\n\n\n\n\nWhile this is informative, we cant see the exact rate for each state, we can make a interactive leaflet plot to better show this trend.\n\n\n\n\nFigure 2: Abortion trends in US states in 2008. It can be seen that states in the middle of the county have the lowest abortion rate while California, Nevada, Florida, and New York have the highest rate. Source: [https://CRAN.R-project.org/package=poliscidata]\n\n\nNow we can look at a categorical variable, with a static plot with gay marige support.\n\n\n\n\n\nFigure 3: support of gay marriage in us states. We can see that most states in the south have low support, while states on the east and west coasts and rust belt have higher support.\n\n\n\n\nAnd again here is a interactive version using leaflet.\n\n\n\n\nFigure 4: support of gay marriage in us states. We can see that most states in the south have low support, while states on the east and west coasts and rust belt have higher support. Source: [https://CRAN.R-project.org/package=poliscidata]"
   }
 ]
